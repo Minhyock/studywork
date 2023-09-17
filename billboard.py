@@ -16,3 +16,5 @@ for music in musics:
         artist = music.select_one("p.artist_name").text.strip()
 
         print(rank.text,title,artist)
+
+# 遅くなり申し訳ございません。よろしくお願いいたします。
