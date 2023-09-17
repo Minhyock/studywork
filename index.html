@@ -1,45 +1,45 @@
-<!doctype html>
+<!Doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
 
-    <title>人生最高の映画 - MW</title>
+    <title>スパルタペディア</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
 
     <style>
         * {
-            font-family: 'Gowun Dodum', sans-serif;
+            font-family: 'Kosugi Maru', sans-serif;
         }
 
         .mytitle {
-            width: 50%;
-            height: 70%;
+            width: 100%;
+            height: 250px;
 
-            background-image: url('https://media.istockphoto.com/id/1299120566/ko/%EB%B2%A1%ED%84%B0/%ED%9D%B0%EC%83%89-%EB%B0%B0%EA%B2%BD%EC%97%90-%EA%B2%A9%EB%A6%AC-%EB%90%9C-%ED%95%84%EB%A6%84-%ED%81%B4%EB%9E%98%ED%8D%BC-%EB%B3%B4%EB%93%9C-%EB%B9%88-%EC%98%81%ED%99%94-%ED%81%B4%EB%9E%98%ED%8D%BC-%EC%8B%9C%EB%84%A4%EB%A7%88-%EB%B2%A1%ED%84%B0-%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8-eps-10.jpg?s=612x612&w=0&k=20&c=1C7I8jqoq3y7BD2Guyx9So1NGtq1wuWMMOF-E7EmMBg=');
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg');
             background-position: center;
             background-size: cover;
-            background-color: white;
 
-            color: yellowgreen;
+            color: white;
 
-            margin: 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        .mytitle>button {
+        .mytitle > button {
             width: 200px;
             height: 50px;
 
@@ -52,12 +52,12 @@
             margin-top: 10px;
         }
 
-        .mytitle>button:hover {
+        .mytitle > button:hover {
             border: 2px solid white;
         }
 
         .mycomment {
-            color: rgb(128, 128, 128);
+            color: gray;
         }
 
         .mycards {
@@ -65,64 +65,174 @@
             width: 95%;
             max-width: 1200px;
         }
-        .mybtns>button {
+
+        .mypost {
+            width: 95%;
+            max-width: 500px;
+            margin: 20px auto 0px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+        }
+
+        .mybtns {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 20px;
+        }
+
+        .mybtns > button {
             margin-right: 10px;
         }
-        .card-img-top{
-
-          height: 400px;
-        }
     </style>
+    <script>
+        $(document).ready(function () {
+            listing();
+        });
+
+        function listing() {
+            fetch('/movie').then(res => res.json()).then(data => {
+                let rows = data['result']
+                $('#cards-box').empty()
+                rows.forEach((a) => {
+                    let title = a['title']
+                    let desc = a['desc']
+                    let image = a['image']
+                    let comment = a['comment']
+                    let star = a['star']
+
+                    let star_repeat = '⭐'.repeat(star)
+
+                    let temp_html = `<div class="col">
+                                            <div class="card h-100">
+                                                <img src="${image}"
+                                                     class="card-img-top">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${title}</h5>
+                                                    <p class="card-text">${desc}</p>
+                                                    <p>${star_repeat}</p>
+                                                    <p class="mycomment">${comment}</p>
+                                                </div>
+                                            </div>
+                                        </div>`
+
+                    $('#cards-box').append(temp_html)
+                })
+            })
+        }
+
+        function posting() {
+            let url = $('#url').val()
+            let comment = $('#comment').val()
+            let star = $('#star').val()
+
+            let formData = new FormData()
+            formData.append("url_give", url)
+            formData.append("comment_give", comment)
+            formData.append("star_give", star)
+
+            fetch('/movie', {method: "POST", body: formData}).then(res => res.json()).then(data => {
+                alert(data['msg'])
+                window.location.reload()
+            })
+        }
+
+        function open_box() {
+            $('#post-box').show()
+        }
+
+        function close_box() {
+            $('#post-box').hide()
+        }
+    </script>
 </head>
 
 <body>
-    <div class="mytitle">
-        <h1>人生最高の映画</h1>
-      <p>TOP3</p>
-      <p>Dark knight</p>
-      <p>Avengers: Endgame</p>
-      <p>クレヨンしんちゃん 嵐を呼ぶ モーレツ!オトナ帝国の逆襲</p>
+<div class="mytitle">
+    <h1>人生最高の映画</h1>
+    <button onclick="open_box()">映画記録</button>
+</div>
+<div class="mypost" id="post-box">
+    <div class="form-floating mb-3">
+        <input id="url" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+        <label for="floatingInput">映画URL</label>
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">点数</label>
+        <select class="form-select" id="star">
+            <option selected>-- 選択する --</option>
+            <option value="1">⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+        </select>
     </div>
 
-    <div class="mycards">
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://static.mercdn.net/item/detail/orig/photos/m10970237700_1.jpg"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Title</h5>
-                        <p class="card-text">説明</p>
-                        <p>⭐⭐⭐⭐⭐</p>
-                        <p class="mycomment">レビュー</p>
-                    </div>
+    <div class="form-floating">
+      <textarea id="comment" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                style="height: 100px"></textarea>
+        <label for="floatingTextarea2">コメント</label>
+    </div>
+    <div class="mybtns">
+        <button onclick="posting()" type="button" class="btn btn-dark">記録</button>
+        <button onclick="close_box()" type="button" class="btn btn-outline-dark">閉じる</button>
+    </div>
+</div>
+<div class="mycards">
+    <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://eiga.k-img.com/images/movie/97490/photo/6bfe14f287a8a19b/320.jpg?1670141541"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">映画のタイトルが入ります</h5>
+                    <p class="card-text">ここに映画の説明が入ります。</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">自分の一行レビューを書きます</p>
                 </div>
             </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://d2ueuvlup6lbue.cloudfront.net/variants/production/store/fitpad/300/420/hn5k82yfwhjfgufxfmk8e5tsznwh/60414_.jpg"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Title</h5>
-                        <p class="card-text">説明</p>
-                        <p>⭐⭐⭐⭐⭐</p>
-                        <p class="mycomment">レビュー</p>
-                    </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://eiga.k-img.com/images/movie/97490/photo/6bfe14f287a8a19b/320.jpg?1670141541"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">映画のタイトルが入ります</h5>
+                    <p class="card-text">ここに映画の説明が入ります。</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">自分の一行レビューを書きます</p>
                 </div>
             </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://m.media-amazon.com/images/I/518BwUge+AL._AC_UF1000,1000_QL80_.jpg"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Title</h5>
-                        <p class="card-text">説明</p>
-                        <p>⭐⭐⭐⭐⭐</p>
-                        <p class="mycomment">レビュー</p>
-                    </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://eiga.k-img.com/images/movie/97490/photo/6bfe14f287a8a19b/320.jpg?1670141541"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">映画のタイトルが入ります</h5>
+                    <p class="card-text">ここに映画の説明が入ります。</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">自分の一行レビューを書きます</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://eiga.k-img.com/images/movie/97490/photo/6bfe14f287a8a19b/320.jpg?1670141541"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">映画のタイトルが入ります</h5>
+                    <p class="card-text">ここに映画の説明が入ります。</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">自分の一行レビューを書きます</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
+
 </html>
